@@ -1,0 +1,63 @@
+plugins {
+    id 'java'
+    id 'com.google.protobuf' version '0.9.4'
+    id 'application'
+}
+
+group = 'com.betterme'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.25.5"
+    }
+    plugins {
+        grpc {
+            artifact = 'io.grpc:protoc-gen-grpc-java:1.68.1'
+        }
+    }
+    generateProtoTasks {
+        all()*.plugins {
+            grpc {}
+        }
+    }
+}
+
+sourceSets.main.java.srcDir new File(buildDir, 'generated/source')
+
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    runtimeOnly 'io.grpc:grpc-netty-shaded:1.68.1'
+    implementation 'io.grpc:grpc-protobuf:1.68.1'
+    implementation 'io.grpc:grpc-stub:1.68.1'
+    compileOnly 'org.apache.tomcat:annotations-api:6.0.53'
+
+    implementation "org.openjfx:javafx-controls:17.0.2:win"
+    implementation "org.openjfx:javafx-fxml:17.0.2:win"
+    implementation "org.openjfx:javafx-media:17.0.2:win"
+    implementation "org.openjfx:javafx-base:17.0.2:win"
+    implementation "org.openjfx:javafx-graphics:17.0.2:win"
+    implementation "org.openjfx:javafx-swing:17.0.2:win"
+}
+
+application {
+    mainClass = 'Main'
+    applicationDefaultJvmArgs = [
+            '--add-modules=javafx.controls,javafx.media,javafx.swing,java.desktop'
+    ]
+}
+
+test {
+    useJUnitPlatform()
+}
