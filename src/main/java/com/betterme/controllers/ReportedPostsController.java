@@ -56,6 +56,12 @@ public class ReportedPostsController {
         imageArea.setImage(new Image(new ByteArrayInputStream(post.getMultimedia())));
     }
 
+    private void resetPostInfo() {
+        titleLabel.setText("");
+        descriptionLabel.setText("");
+        imageArea.setImage(null);
+    }
+
     private void getNextReportedPost() {
         HttpRequest reportRequest = HttpRequest.newBuilder()
                 .uri(URI.create(reportsUri))
@@ -235,6 +241,7 @@ public class ReportedPostsController {
                     return null;
                 });
 
+        resetPostInfo();
         nextReport();
     }
 
@@ -314,6 +321,7 @@ public class ReportedPostsController {
                     return null;
                 });
 
+        resetPostInfo();
         nextReport();
     }
 
