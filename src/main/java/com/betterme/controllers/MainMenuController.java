@@ -1,6 +1,7 @@
 package com.betterme.controllers;
 
 import com.betterme.Main;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -33,5 +34,25 @@ public class MainMenuController {
         Alert a = new Alert(type, text);
         a.initOwner(mainPane.getScene().getWindow());
         a.showAndWait();
+    }
+
+    public void onEvaluateReportedPosts(ActionEvent actionEvent) {
+        try {
+            changeView("/views/ReportedPostsView.fxml");
+        }
+        catch (IOException e) {
+            showAlert("Ocurrió un error interno en la aplicación. Contacte a soporte.", Alert.AlertType.ERROR);
+            e.printStackTrace();
+        }
+    }
+
+    public void onCreateModAccount(ActionEvent actionEvent) {
+        try {
+            changeView("/views/NewModAccountView.fxml");
+        }
+        catch (IOException e) {
+            showAlert("Ocurrió un error interno en la aplicación. Contacte a soporte.", Alert.AlertType.ERROR);
+            e.printStackTrace();
+        }
     }
 }

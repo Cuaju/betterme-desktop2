@@ -1,53 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
-<?import javafx.geometry.Insets?>
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.betterme.controllers.LoginController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.betterme.controllers.LoginController">
     <children>
-        <VBox alignment="TOP_CENTER"
-              spacing="28"
-              AnchorPane.leftAnchor="0"
-              AnchorPane.rightAnchor="0"
-              AnchorPane.topAnchor="40">
+        <VBox alignment="TOP_CENTER" spacing="28" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="40">
 
             <ImageView fitWidth="200" preserveRatio="true">
                 <image>
-                    <Image url="@../assets/betterme-logo.png"/>
+                    <Image url="@../assets/betterme-logo.png" />
                 </image>
             </ImageView>
 
-            <Label text="Iniciar sesión" style="-fx-font-size: 28px; -fx-font-weight: bold;"/>
+            <Label style="-fx-font-size: 28px; -fx-font-weight: bold;" text="Iniciar sesión" />
             <GridPane hgap="12" vgap="18">
                 <padding>
-                    <Insets top="8" left="8" right="8" bottom="8"/>
+                    <Insets bottom="8" left="8" right="8" top="8" />
                 </padding>
 
-                <Label text="Correo" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                <TextField fx:id="emailField"
-                           promptText="ejemplo@dominio.com"
-                           prefWidth="280"
-                           GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                <Label text="Usuario" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <TextField fx:id="emailField" prefWidth="280" promptText="JohnDoe" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
-                <Label text="Contraseña" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                <PasswordField fx:id="passwordField"
-                               promptText="*******"
-                               prefWidth="280"
-                               GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                <Label text="Contraseña" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                <PasswordField fx:id="passwordField" prefWidth="280" promptText="*******" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <columnConstraints>
+               <ColumnConstraints />
+               <ColumnConstraints />
+            </columnConstraints>
+            <rowConstraints>
+               <RowConstraints />
+               <RowConstraints />
+            </rowConstraints>
             </GridPane>
 
-            <Button
-                    text="Iniciar sesión"
-                    prefWidth="220"
-                    onAction="#onLogin"
-                    style="-fx-background-color: #262626; -fx-text-fill: white; -fx-font-size: 15px;"/>
+            <Button onAction="#onLogin" prefWidth="220" style="-fx-background-color: #262626; -fx-text-fill: white; -fx-font-size: 15px;" text="Iniciar sesión" />
 
         </VBox>
     </children>
