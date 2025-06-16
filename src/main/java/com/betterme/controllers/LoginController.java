@@ -1,15 +1,21 @@
 package com.betterme.controllers;
 
+import com.betterme.ProgramConfigurations;
 import com.betterme.sessionData.CurrentUser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -49,7 +55,7 @@ public class LoginController {
         // Guys this is to Build HTTP request
         // on later things you will need to pput another header for the token
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:6968/api/authentication/login"))
+                .uri(URI.create(ProgramConfigurations.getConfiguration().getProperty("authenticationAPI.url") + "/login"))
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(jsonBody, StandardCharsets.UTF_8))
                 .build();
@@ -59,20 +65,13 @@ public class LoginController {
                     if (response.statusCode() == 200) {
                         try {
                             JsonNode respJson = mapper.readTree(response.body());
-                            String token = respJson.get("accessToken").asText();
-                            Platform.runLater(() -> {
-                                // Clear fields
-                                emailField.clear();
-                                passwordField.clear();
-                                emailField.setText(token);
-                                CurrentUser.jwt = token;
-                                showAlert("Logged in! Token:\n" + token, Alert.AlertType.INFORMATION);
-                            });
+                            CurrentUser.jwt = respJson.get("accessToken").asText();
                         } catch (Exception ex) {
                             Platform.runLater(() ->
                                     showAlert("Invalid response from server", Alert.AlertType.ERROR)
                             );
                         }
+                        navigateToMainMenu();
                     } else if (response.statusCode() == 401) {
                         Platform.runLater(() ->
                                 showAlert("Bad credentials", Alert.AlertType.WARNING)
@@ -89,6 +88,29 @@ public class LoginController {
                     );
                     return null;
                 });
+    }
+
+    private void navigateToMainMenu() {
+        Platform.runLater(() -> {
+              FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/MainMenuView.fxml"));
+              Parent root;
+              try {
+                  root = loader.load();
+              }
+              catch (IOException e) {
+                  throw new RuntimeException(e);
+              }
+              Stage nuevoStage = new Stage();
+              nuevoStage.setScene(new Scene(root));
+              nuevoStage.setTitle("BetterMe Desktop");
+              nuevoStage.show();
+
+              Stage actualStage = (Stage) this.emailField.getScene()
+                                                         .getWindow();
+              actualStage.close();
+          }
+        );
+
     }
 
     //shit for alerts you guys alr know this

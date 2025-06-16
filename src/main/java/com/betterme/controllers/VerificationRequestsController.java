@@ -1,6 +1,7 @@
 package com.betterme.controllers;
 
 import com.betterme.ProgramConfigurations;
+import com.betterme.sessionData.CurrentUser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -42,7 +43,7 @@ public class VerificationRequestsController implements Initializable {
 
     private final ObjectMapper mapper = new ObjectMapper();
     private final HttpClient client = HttpClient.newHttpClient();
-    private String token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MzM3OTQzY2VhODQxZTIyODNlNjQ4ZiIsInVzZXJuYW1lIjoicGFsZSIsImVtYWlsIjoiZXBhbGVtb2xpbmFAZ21haWwuY29tIiwicm9sZSI6Ik1vZGVyYXRvciIsImlhdCI6MTc1MDA4NTQ4MywiZXhwIjoxNzUwMDg5MDgzfQ.WuOy8ZmY1aFkBr2i0bHYmqU6o6WgrT3R04uf3zI87ivOvOZSG2TCcfcROFcXx1kMcyZqboNe4nsAr_-oPhyLIxFLNd5ILopyMsSAMYmq4KKMk9fYsKDJox8f4Jm4f40NedBUi8fOMYt9QeVDHb1JX_HwNRt7m3mrlz90S3gAKVugYDlhmzQM0DnLRZsaiofgQQ9nG9b5feVPXEfvHip0lvksBINw32-5CBPGi1A5gHwTGX6KWolLTpMcWBd792Bd_499JhaNTqHJa4B61PQw9s4c-RGaZi09C0naSW54EEcTxcB0BE75a-OU4am5B64O3c65qGxYUypBfSuzOyXFZw";
+    private String token = CurrentUser.jwt;
     private String verificationRequestId;
     private String applicantUserId;
 
@@ -98,7 +99,7 @@ public class VerificationRequestsController implements Initializable {
                 JsonNode verificationRequest = respJson.get("verificationRequests").get(0);
                 if (verificationRequest == null) {
                     this.verificationRequestVBox.setVisible(false);
-                    showAlert("No hay solicitudes pendientes por evaluar", Alert.AlertType.INFORMATION);
+                    Platform.runLater(() -> showAlert("No hay solicitudes pendientes por evaluar", Alert.AlertType.INFORMATION));
                     return;
                 }
 
@@ -120,6 +121,10 @@ public class VerificationRequestsController implements Initializable {
     }
 
     private void loadApplicantInformation() {
+        if (this.applicantUserId == null) {
+            return;
+        }
+
         String usersAPIUrl = ProgramConfigurations.getConfiguration()
                                                           .getProperty("usersAPI.url");
 
