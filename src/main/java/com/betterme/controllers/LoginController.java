@@ -1,5 +1,6 @@
 package com.betterme.controllers;
 
+import com.betterme.sessionData.CurrentUser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Platform;
@@ -64,7 +65,7 @@ public class LoginController {
                                 emailField.clear();
                                 passwordField.clear();
                                 emailField.setText(token);
-                                // TODO: store token somewhere, then switch to the main menu GUI
+                                CurrentUser.jwt = token;
                                 showAlert("Logged in! Token:\n" + token, Alert.AlertType.INFORMATION);
                             });
                         } catch (Exception ex) {

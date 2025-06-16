@@ -1,0 +1,36 @@
+syntax = "proto3";
+option go_package = "./proto";
+import "google/protobuf/timestamp.proto";
+package MultimediaService;
+
+service MultimediaService {
+  rpc GetPostMultimedia(PostInfo) returns (stream FileChunk);
+  rpc GetUserProfileImage(UserInfo) returns (stream FileChunk);
+  rpc CreatePost(Post) returns (Post);
+  rpc UploadPostMultimedia(stream FileChunk) returns (PostInfo);
+  rpc UploadProfileImage(stream FileChunk) returns (UserInfo);
+}
+
+message PostInfo {
+  string id = 1;
+}
+
+message UserInfo {
+  string id = 1;
+}
+
+message FileChunk {
+  bytes chunk = 1;
+  string resourceId = 2;
+  string ext = 3;
+}
+
+message Post {
+  string id = 1;
+  string title = 2;
+  string description = 3;
+  string category = 4;
+  string userId = 5;
+  google.protobuf.Timestamp timeStamp = 6;
+  string status = 7;
+}
