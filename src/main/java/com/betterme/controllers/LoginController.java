@@ -1,6 +1,7 @@
 package com.betterme.controllers;
 
 import com.betterme.ProgramConfigurations;
+import com.betterme.sessionData.AppContext;
 import com.betterme.sessionData.CurrentUser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -92,22 +93,14 @@ public class LoginController {
 
     private void navigateToMainMenu() {
         Platform.runLater(() -> {
-              FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/MainMenuView.fxml"));
-              Parent root;
-              try {
-                  root = loader.load();
-              }
-              catch (IOException e) {
-                  throw new RuntimeException(e);
-              }
-              Stage nuevoStage = new Stage();
-              nuevoStage.setScene(new Scene(root));
-              nuevoStage.setTitle("BetterMe Desktop");
-              nuevoStage.show();
-
-              Stage actualStage = (Stage) this.emailField.getScene()
-                                                         .getWindow();
-              actualStage.close();
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/MainMenuView.fxml"));
+                Parent root = loader.load();
+                AppContext.getMainPane().setCenter(root);
+            }
+            catch (Exception ex) {
+                return;
+            }
           }
         );
 

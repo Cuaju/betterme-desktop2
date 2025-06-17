@@ -1,86 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/8"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.betterme.controllers.NewModAccountController"
-            prefWidth="600" prefHeight="700">
+<AnchorPane prefHeight="700" prefWidth="600" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.betterme.controllers.NewModAccountController">
 
     <children>
-        <VBox spacing="20" alignment="TOP_CENTER"
-              AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20"
-              AnchorPane.rightAnchor="20" AnchorPane.bottomAnchor="20">
-
-            <!-- Logo -->
-            <ImageView fitWidth="200" preserveRatio="true">
-                <image>
-                    <Image url="@/assets/betterme-logo.png"/>
-                </image>
-            </ImageView>
-
-            <Label text="Crear cuenta de moderador"
-                   style="-fx-font-size: 28px; -fx-font-weight: bold;"/>
+        <VBox alignment="TOP_CENTER" spacing="20" AnchorPane.bottomAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20" AnchorPane.topAnchor="20">
+         <GridPane>
+           <columnConstraints>
+             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+               <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" percentWidth="80.0" prefWidth="200.0" />
+             <ColumnConstraints hgrow="SOMETIMES" maxWidth="180.0" minWidth="10.0" />
+           </columnConstraints>
+           <rowConstraints>
+             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+           </rowConstraints>
+            <children>
+      
+                  <Label style="-fx-font-size: 28px; -fx-font-weight: bold;" text="Crear cuenta de moderador" GridPane.columnIndex="1" />
+               <Button mnemonicParsing="false" onAction="#returnToMenu" text="Regresar" />
+            </children>
+         </GridPane>
 
             <GridPane hgap="15" vgap="12">
                 <padding>
-                    <Insets top="8" right="8" bottom="8" left="8"/>
+                    <Insets bottom="8" left="8" right="8" top="8" />
                 </padding>
 
                 <columnConstraints>
-                    <ColumnConstraints percentWidth="50" hgrow="ALWAYS"/>
-                    <ColumnConstraints percentWidth="50" hgrow="ALWAYS"/>
+                    <ColumnConstraints hgrow="ALWAYS" percentWidth="50" />
+                    <ColumnConstraints hgrow="ALWAYS" percentWidth="50" />
                 </columnConstraints>
 
-                <Label text="Nombre de usuario"
-                       GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                <TextField fx:id="tfUsername" promptText="pepito123"
-                           GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                <Label text="Nombre de usuario" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <TextField fx:id="tfUsername" promptText="pepito123" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
-                <Label text="Contraseña"
-                       GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                <PasswordField fx:id="pfPassword"
-                               promptText="Al menos 8 caracteres, 1 mayúscula y 1 caracter especial"
-                               GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                <Label text="Contraseña" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                <PasswordField fx:id="pfPassword" promptText="Al menos 8 caracteres, 1 mayúscula y 1 caracter especial" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
-                <Label text="Nombre completo"
-                       GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                <TextField fx:id="tfFullName" promptText="Ej. John Doe Doe"
-                           GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                <Label text="Nombre completo" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                <TextField fx:id="tfFullName" promptText="Ej. John Doe Doe" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-                <Label text="Repetir contraseña"
-                       GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-                <PasswordField fx:id="pfRepeatPassword"
-                               GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                <Label text="Repetir contraseña" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                <PasswordField fx:id="pfRepeatPassword" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
-                <Label text="Correo"
-                       GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-                <TextField fx:id="tfEmail" promptText="ejemplo@dominio.com"
-                           GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+                <Label text="Correo" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                <TextField fx:id="tfEmail" promptText="ejemplo@dominio.com" GridPane.columnIndex="1" GridPane.rowIndex="4" />
 
-                <Label text="Fecha de nacimiento"
-                       GridPane.rowIndex="5" GridPane.columnIndex="0"/>
-                <DatePicker fx:id="dpBirthday" promptText="dd/MM/aaaa"
-                            GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+                <Label text="Fecha de nacimiento" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                <DatePicker fx:id="dpBirthday" promptText="dd/MM/aaaa" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <rowConstraints>
+               <RowConstraints />
+               <RowConstraints />
+               <RowConstraints />
+               <RowConstraints />
+               <RowConstraints />
+               <RowConstraints />
+            </rowConstraints>
             </GridPane>
 
-            <VBox spacing="10" alignment="CENTER">
-                <Button fx:id="createAccountButton"
-                        text="Crear cuenta"
-                        prefWidth="200"
-                        style="-fx-background-color: #262626; -fx-text-fill: white; -fx-font-size: 14px;"
-                        onAction="#onCreateAccount"/>
+            <VBox alignment="CENTER" spacing="10">
+                <Button fx:id="createAccountButton" onAction="#onCreateAccount" prefWidth="200" style="-fx-background-color: #262626; -fx-text-fill: white; -fx-font-size: 14px;" text="Crear cuenta" />
             </VBox>
         </VBox>
     </children>

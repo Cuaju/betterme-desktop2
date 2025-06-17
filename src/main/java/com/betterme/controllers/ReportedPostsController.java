@@ -2,8 +2,10 @@ package com.betterme.controllers;
 
 import MultimediaService.Multimedia;
 import MultimediaService.MultimediaServiceGrpc;
+import com.betterme.ProgramConfigurations;
 import com.betterme.managers.MultimediaServiceManager;
 import com.betterme.models.Post;
+import com.betterme.sessionData.AppContext;
 import com.betterme.sessionData.CurrentUser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -14,6 +16,8 @@ import io.grpc.stub.StreamObserver;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -39,14 +43,19 @@ public class ReportedPostsController {
     private Post post = null;
     private String postId = null;
 
-    private final String reportsUri = "http://localhost:6971/reports";
-    private final String postsUri = "http://localhost:5017/posts";
+    private final String reportsUri = ProgramConfigurations.getConfiguration()
+            .getProperty("reportsAPI.url");
+    private final String postsUri = ProgramConfigurations.getConfiguration()
+            .getProperty("postsAPI.url");
 
     public ReportedPostsController() {
         getNextReportedPost();
 
         if (post != null) {
             setPostInfo();
+        }
+        else {
+            showAlert("No hay publicaciones reportadas", Alert.AlertType.INFORMATION);
         }
     }
 
@@ -157,11 +166,15 @@ public class ReportedPostsController {
     
     private void showAlert(String text, Alert.AlertType type) {
         Alert a = new Alert(type, text);
-        a.initOwner(imageArea.getScene().getWindow());
+        a.initOwner(AppContext.getMainPane().getScene().getWindow());
         a.showAndWait();
     }
 
     public void deletePost(ActionEvent actionEvent) {
+        if (post == null) {
+            return;
+        }
+
         ObjectMapper mapper = new ObjectMapper();
 
         String jsonBody;
@@ -246,6 +259,10 @@ public class ReportedPostsController {
     }
 
     public void rejectReport(ActionEvent actionEvent) {
+        if (post == null) {
+            return;
+        }
+
         ObjectMapper mapper = new ObjectMapper();
 
         String jsonBody;
@@ -326,6 +343,15 @@ public class ReportedPostsController {
     }
 
     public void returnToMenu(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/MainMenuView.fxml"));
+            Parent root = loader.load();
+            AppContext.getMainPane().setCenter(root);
+        }
+        catch (IOException e) {
+            showAlert("Ocurrió un error interno en la aplicación. Contacte a soporte.", Alert.AlertType.ERROR);
+            e.printStackTrace();
+        }
     }
 
     private void nextReport() {

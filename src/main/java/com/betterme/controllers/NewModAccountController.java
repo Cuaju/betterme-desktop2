@@ -1,14 +1,19 @@
 package com.betterme.controllers;
 
+import com.betterme.sessionData.AppContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -121,6 +126,24 @@ public class NewModAccountController {
         a.setTitle(title);
         a.setHeaderText(null);
         a.setContentText(msg);
+        a.showAndWait();
+    }
+
+    public void returnToMenu(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/MainMenuView.fxml"));
+            Parent root = loader.load();
+            AppContext.getMainPane().setCenter(root);
+        }
+        catch (IOException e) {
+            showAlert("Ocurrió un error interno en la aplicación. Contacte a soporte.", Alert.AlertType.ERROR);
+            e.printStackTrace();
+        }
+    }
+
+    private void showAlert(String text, Alert.AlertType type) {
+        Alert a = new Alert(type, text);
+        a.initOwner(AppContext.getMainPane().getScene().getWindow());
         a.showAndWait();
     }
 }

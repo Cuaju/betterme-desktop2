@@ -2,6 +2,7 @@ package com.betterme.managers;
 
 import MultimediaService.Multimedia;
 import MultimediaService.MultimediaServiceGrpc;
+import com.betterme.ProgramConfigurations;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
@@ -10,10 +11,15 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 public class MultimediaServiceManager {
+    private final String multimediaUri = ProgramConfigurations.getConfiguration()
+            .getProperty("multimediaAPI.url");
+    private final String multimediaPort = ProgramConfigurations.getConfiguration()
+            .getProperty("multimediaAPI.port");
+
     public byte[] getPostMultimedia(String postId) throws Error {
-        ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 6970)
+        ManagedChannel channel = ManagedChannelBuilder.forAddress(multimediaUri, Integer.parseInt(multimediaPort))
                 .usePlaintext().build();
-        MultimediaServiceGrpc.MultimediaServiceStub stub =MultimediaServiceGrpc.newStub(channel);
+        MultimediaServiceGrpc.MultimediaServiceStub stub = MultimediaServiceGrpc.newStub(channel);
 
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 

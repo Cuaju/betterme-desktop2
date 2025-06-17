@@ -1,13 +1,17 @@
 package com.betterme.controllers;
 
 import com.betterme.ProgramConfigurations;
+import com.betterme.sessionData.AppContext;
 import com.betterme.sessionData.CurrentUser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -100,6 +104,10 @@ public class VerificationRequestsController implements Initializable {
                 if (verificationRequest == null) {
                     this.verificationRequestVBox.setVisible(false);
                     Platform.runLater(() -> showAlert("No hay solicitudes pendientes por evaluar", Alert.AlertType.INFORMATION));
+                    return;
+                }
+
+                if (!verificationRequest.has("_id")) {
                     return;
                 }
 
@@ -261,5 +269,17 @@ public class VerificationRequestsController implements Initializable {
         Alert a = new Alert(type, text);
         a.initOwner(requestDateLabel.getScene().getWindow());
         a.showAndWait();
+    }
+
+    public void returnToMenu(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/MainMenuView.fxml"));
+            Parent root = loader.load();
+            AppContext.getMainPane().setCenter(root);
+        }
+        catch (IOException e) {
+            showAlert("Ocurrió un error interno en la aplicación. Contacte a soporte.", Alert.AlertType.ERROR);
+            e.printStackTrace();
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.betterme.controllers;
 
 import com.betterme.Main;
+import com.betterme.sessionData.AppContext;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,11 +11,7 @@ import javafx.scene.layout.BorderPane;
 import java.io.IOException;
 
 public class MainMenuController {
-    @FXML
-    private BorderPane mainPane;
-
-    @FXML
-    private void onEvaluateVerificationRequests() {
+    public void onEvaluateVerificationRequests() {
         try {
             changeView("/views/VerificationRequestsView.fxml");
         }
@@ -27,12 +24,12 @@ public class MainMenuController {
     public void changeView(String fxml) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
         Parent root = loader.load();
-        mainPane.setCenter(root);
+        AppContext.getMainPane().setCenter(root);
     }
 
     private void showAlert(String text, Alert.AlertType type) {
         Alert a = new Alert(type, text);
-        a.initOwner(mainPane.getScene().getWindow());
+        a.initOwner(AppContext.getMainPane().getScene().getWindow());
         a.showAndWait();
     }
 
