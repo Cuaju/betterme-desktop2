@@ -52,4 +52,14 @@ public class MainMenuController {
             e.printStackTrace();
         }
     }
+
+    public void onUnbanAccounts(ActionEvent actionEvent) {
+        try {
+            changeView("/views/UnbanAccountsView.fxml");
+        }
+        catch (IOException e) {
+            showAlert("Ocurrió un error interno en la aplicación. Contacte a soporte.", Alert.AlertType.ERROR);
+            e.printStackTrace();
+        }
+    }
 }
