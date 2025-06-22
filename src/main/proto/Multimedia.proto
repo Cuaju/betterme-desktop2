@@ -33,4 +33,5 @@ message Post {
   string userId = 5;
   google.protobuf.Timestamp timeStamp = 6;
   string status = 7;
+  string multimediaExtension = 8;
 }
