@@ -4,19 +4,9 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.betterme.controllers.UnbanAccountsView">
    <children>
-      <TableView fx:id="usersTable" layoutX="27.0" layoutY="50.0" prefHeight="335.0" prefWidth="547.0">
-        <columns>
-          <TableColumn fx:id="idColumn" prefWidth="82.0" text="id" />
-          <TableColumn fx:id="userColumn" prefWidth="188.0" text="nombre de usuario" />
-            <TableColumn fx:id="nameColumn" prefWidth="200.0" text="nombre" />
-            <TableColumn fx:id="unbanButtonColumn" prefWidth="76.0" text="reactivar" />
-        </columns>
-      </TableView>
-      <TextField fx:id="usernameTextBox" layoutX="335.0" layoutY="14.0" promptText="nombre de usuario" />
-      <Button layoutX="514.0" layoutY="14.0" mnemonicParsing="false" onAction="#onSearchClick" text="Buscar" />
+      <TableView fx:id="usersTable" layoutX="27.0" layoutY="50.0" prefHeight="335.0" prefWidth="547.0" />
       <Label layoutX="27.0" layoutY="10.0" text="Cuentas suspendidas">
          <font>
             <Font size="24.0" />
