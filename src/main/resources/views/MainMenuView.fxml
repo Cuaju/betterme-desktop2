@@ -41,7 +41,7 @@
                <font>
                   <Font size="22.0" />
                </font></Button>
-            <Button layoutX="428.0" layoutY="399.0" mnemonicParsing="false" onAction="#onUnbanAccounts" prefHeight="46.0" prefWidth="444.0" text="Reactivar cuentas">
+            <Button layoutX="428.0" layoutY="399.0" mnemonicParsing="false" onAction="#onUnbanAccounts" prefHeight="46.0" prefWidth="444.0" text="Administrar cuentas de usuario">
                <font>
                   <Font size="22.0" />
                </font>

@@ -2,11 +2,10 @@ package com.betterme.models;
 
 public class User {
     private String id;
-    private String username;
-    private String email;
-    private String name;
-    private boolean active;
-    private String userType;
+    private String account;
+    private String description;
+    private String website;
+    private boolean verified;
 
     public String getId() {
         return id;
@@ -16,43 +15,35 @@ public class User {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getAccount() {
+        return account;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setAccount(String account) {
+        this.account = account;
     }
 
-    public String getEmail() {
-        return email;
+    public String getDescription() {
+        return description;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public String getName() {
-        return name;
+    public String getWebsite() {
+        return website;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setWebsite(String website) {
+        this.website = website;
     }
 
-    public boolean isActive() {
-        return active;
+    public boolean isVerified() {
+        return verified;
     }
 
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    public String getUserType() {
-        return userType;
-    }
-
-    public void setUserType(String userType) {
-        this.userType = userType;
+    public void setVerified(boolean verified) {
+        this.verified = verified;
     }
 }
