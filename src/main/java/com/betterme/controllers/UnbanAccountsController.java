@@ -13,11 +13,14 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.net.http.HttpClient;
@@ -42,7 +45,7 @@ public class UnbanAccountsController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         getBannedAccounts();
 
-        if (!users.isEmpty()) {
+        if (users != null && !users.isEmpty()) {
             updateTable();
         }
     }
@@ -59,12 +62,18 @@ public class UnbanAccountsController implements Initializable {
                 .thenAcceptAsync(response -> {
                     if (response.statusCode() == 200) {
                         try {
+                            System.out.println(response.body());
                             users = new ObjectMapper().readValue(response.body(), new TypeReference<>() {});
                         } catch (JsonProcessingException e) {
+                            System.out.println(e.getMessage());
                             Platform.runLater(() ->
-                                showAlert("Ocurrió un error recibiendo los datos, intente nuevamente", Alert.AlertType.ERROR)
+                                showAlert("Ocurrió un error recibiendo los datos, intente nuevamente: ", Alert.AlertType.ERROR)
                             );
                         }
+                    } else {
+                        Platform.runLater(() ->
+                            showAlert("Ocurrió un error recibiendo los datos, intente nuevamente: ", Alert.AlertType.ERROR)
+                        );
                     }
                 })
                 .exceptionally(ex -> {
@@ -139,7 +148,7 @@ public class UnbanAccountsController implements Initializable {
 
     private void updateAccountState(String accountId, boolean state) {
         JsonNode payload = new ObjectMapper().createObjectNode()
-                .put("active", true);
+                .put("active", state);
 
         HttpRequest reportRequest = null;
         try {
@@ -156,9 +165,14 @@ public class UnbanAccountsController implements Initializable {
         client.sendAsync(reportRequest, HttpResponse.BodyHandlers.ofString())
                 .thenAcceptAsync(response -> {
                     if (response.statusCode() == 200) {
-                        showAlert("Usuario reactivado correctamente", Alert.AlertType.INFORMATION);
+                        Platform.runLater(() ->
+                            showAlert("Usuario modificado correctamente", Alert.AlertType.INFORMATION)
+                        );
                     } else {
-                        showAlert("Ocurrió un error", Alert.AlertType.ERROR);
+                        System.out.println(response.body());
+                        Platform.runLater(() ->
+                            showAlert("Ocurrió un error: " + response.body(), Alert.AlertType.ERROR)
+                        );
                     }
                 })
                 .exceptionally(ex -> {
@@ -183,12 +197,19 @@ public class UnbanAccountsController implements Initializable {
                 .thenAcceptAsync(response -> {
                     if (response.statusCode() == 200) {
                         try {
-                            userInfo.set(new ObjectMapper().readValue(response.body(), User.class));
+                            JsonNode respJson = new ObjectMapper().readTree(response.body());
+                            User user = new User();
+                            user.setVerified(respJson.get("verified").asBoolean());
+                            userInfo.set(user);
                         } catch (JsonProcessingException e) {
                             Platform.runLater(() ->
                                     showAlert("Ocurrió un error recibiendo los datos, intente nuevamente", Alert.AlertType.ERROR)
                             );
                         }
+                    } else {
+                        Platform.runLater(() ->
+                                showAlert("Ocurrió un error recibiendo los datos, intente nuevamente: " + response.body(), Alert.AlertType.ERROR)
+                        );
                     }
                 })
                 .exceptionally(ex -> {
@@ -212,11 +233,11 @@ public class UnbanAccountsController implements Initializable {
             return;
         }
 
-        String email = emailTextBox.getText();
-        AtomicReference<UserAccount> userInfo = new AtomicReference<>();
+        String email = emailTextBox.getText().trim();
+        AtomicReference<UserAccount> account = new AtomicReference<>();
 
         HttpRequest reportRequest = HttpRequest.newBuilder()
-                .uri(URI.create(usersUri + "/" + email))
+                .uri(URI.create(usersUri + "/email/" + email))
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer " + CurrentUser.jwt)
                 .GET()
@@ -226,7 +247,15 @@ public class UnbanAccountsController implements Initializable {
                 .thenAcceptAsync(response -> {
                     if (response.statusCode() == 200) {
                         try {
-                            userInfo.set(new ObjectMapper().readValue(response.body(), UserAccount.class));
+                            System.out.println(response.body());
+                            JsonNode respJson = new ObjectMapper().readTree(response.body());
+                            UserAccount accountInfo = new UserAccount();
+                            accountInfo.setUsername(respJson.get("username").asText());
+                            accountInfo.setEmail(respJson.get("email").asText());
+                            accountInfo.setName(respJson.get("name").asText());
+                            accountInfo.setActive(respJson.get("active").asBoolean());
+                            accountInfo.setId(respJson.get("_id").asText());
+                            account.set(accountInfo);
                         } catch (JsonProcessingException e) {
                             Platform.runLater(() ->
                                     showAlert("Ocurrió un error recibiendo los datos, intente nuevamente", Alert.AlertType.ERROR)
@@ -237,8 +266,9 @@ public class UnbanAccountsController implements Initializable {
                             showAlert("No se encontró ningun usuario con ese correo", Alert.AlertType.INFORMATION)
                         );
                     } else {
+                        System.out.println(response.body());
                         Platform.runLater(() ->
-                            showAlert("Ocurrió un error, intente de nuevo", Alert.AlertType.ERROR)
+                            showAlert("Ocurrió un error, intente de nuevo: " + response.body(), Alert.AlertType.ERROR)
                         );
                     }
                 })
@@ -249,16 +279,22 @@ public class UnbanAccountsController implements Initializable {
                     return null;
                 }).join();
 
-        if (userInfo.get() == null) {
+        if (account.get() == null) {
             return;
         }
 
-        UserAccount userAccount = userInfo.get();
+        UserAccount userAccount = account.get();
+
+        User user = getUserInfo(userAccount.getId());
+        if (user == null) {
+            showAlert("No se pudo obtener el usuario", Alert.AlertType.ERROR);
+            return;
+        }
+
+        var alert = new Alert(Alert.AlertType.CONFIRMATION);
 
         if (userAccount.isActive()) {
-            User user = getUserInfo(userAccount.getId());
             if (user.isVerified()) {
-                var alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Remover verificación de usuario");
                 alert.setHeaderText("Remover verificación de usuario");
                 alert.setContentText("¿Está seguro que desea eliminar la verificación de " + userAccount.getName() + "?");
@@ -271,10 +307,9 @@ public class UnbanAccountsController implements Initializable {
                     }
                 });
             } else {
-                var alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Suspender usuario");
                 alert.setHeaderText("Suspender usuario");
-                alert.setContentText("¿Está seguro que desea suspender a " + userAccount.getName() + "?");
+                alert.setContentText("¿Está seguro que desea suspender a " + userAccount.getName() + "?\nUsuario: " + userAccount.getUsername());
                 alert.showAndWait().ifPresent((btnType) -> {
                     if (btnType == ButtonType.OK) {
                         updateAccountState(userAccount.getId(), false);
@@ -285,7 +320,6 @@ public class UnbanAccountsController implements Initializable {
                 });
             }
         } else {
-            var alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Reactivar usuario");
             alert.setHeaderText("Reactivar usuario");
             alert.setContentText("¿Está seguro que desea reactivar la cuenta de " + userAccount.getName() + "?");
@@ -340,5 +374,17 @@ public class UnbanAccountsController implements Initializable {
                     );
                     return null;
                 }).join();
+    }
+
+    public void returnToMainMenu(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/MainMenuView.fxml"));
+            Parent root = loader.load();
+            AppContext.getMainPane().setCenter(root);
+        }
+        catch (IOException e) {
+            showAlert("Ocurrió un error interno en la aplicación. Contacte a soporte.", Alert.AlertType.ERROR);
+            e.printStackTrace();
+        }
     }
 }

@@ -58,7 +58,7 @@ public class MainMenuController {
             changeView("/views/UnbanAccountsView.fxml");
         }
         catch (IOException e) {
-            showAlert("Ocurrió un error interno en la aplicación. Contacte a soporte.", Alert.AlertType.ERROR);
+            showAlert("Ocurrió un error interno en la aplicación. Contacte a soporte. " + e.getMessage(), Alert.AlertType.ERROR);
             e.printStackTrace();
         }
     }

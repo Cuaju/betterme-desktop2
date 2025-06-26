@@ -1,6 +1,11 @@
 package com.betterme.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserAccount {
+    @JsonProperty("_id")
     private String id;
     private String username;
     private String email;
