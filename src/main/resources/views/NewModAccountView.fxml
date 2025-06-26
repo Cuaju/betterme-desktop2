@@ -8,7 +8,7 @@
 
     <children>
         <VBox alignment="TOP_CENTER" spacing="20" AnchorPane.bottomAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20" AnchorPane.topAnchor="20">
-         <GridPane>
+         <GridPane alignment="CENTER">
            <columnConstraints>
              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
                <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" percentWidth="80.0" prefWidth="200.0" />
@@ -24,7 +24,7 @@
             </children>
          </GridPane>
 
-            <GridPane hgap="15" vgap="12">
+            <GridPane alignment="CENTER" hgap="15" vgap="12">
                 <padding>
                     <Insets bottom="8" left="8" right="8" top="8" />
                 </padding>

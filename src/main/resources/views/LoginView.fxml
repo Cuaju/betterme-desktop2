@@ -16,7 +16,7 @@
             </ImageView>
 
             <Label style="-fx-font-size: 28px; -fx-font-weight: bold;" text="Iniciar sesión" />
-            <GridPane hgap="12" vgap="18">
+            <GridPane alignment="CENTER" hgap="12" vgap="18">
                 <padding>
                     <Insets bottom="8" left="8" right="8" top="8" />
                 </padding>
