@@ -1,13 +1,11 @@
 package com.betterme.controllers;
 
-import com.betterme.Main;
 import com.betterme.sessionData.AppContext;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
-import javafx.scene.layout.BorderPane;
+
 import java.io.IOException;
 
 public class MainMenuController {
@@ -55,7 +53,7 @@ public class MainMenuController {
 
     public void onUnbanAccounts(ActionEvent actionEvent) {
         try {
-            changeView("/views/UnbanAccountsView.fxml");
+            changeView("/views/ManageAccountsView.fxml");
         }
         catch (IOException e) {
             showAlert("Ocurrió un error interno en la aplicación. Contacte a soporte. " + e.getMessage(), Alert.AlertType.ERROR);

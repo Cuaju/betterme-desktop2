@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class UnbanAccountsController implements Initializable {
+public class ManageAccountsController implements Initializable {
     public TableView usersTable;
 
     private final HttpClient client = HttpClient.newHttpClient();

@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="449.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.betterme.controllers.UnbanAccountsController">
+<AnchorPane prefHeight="449.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.betterme.controllers.ManageAccountsController">
    <children>
       <TableView fx:id="usersTable" layoutX="27.0" layoutY="92.0" prefHeight="335.0" prefWidth="547.0" />
       <Label layoutX="27.0" layoutY="41.0" text="Cuentas suspendidas">
