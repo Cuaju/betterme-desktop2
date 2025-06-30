@@ -62,23 +62,29 @@ public class ManageAccountsController implements Initializable {
                 .thenAcceptAsync(response -> {
                     if (response.statusCode() == 200) {
                         try {
-                            System.out.println(response.body());
                             users = new ObjectMapper().readValue(response.body(), new TypeReference<>() {});
                         } catch (JsonProcessingException e) {
-                            System.out.println(e.getMessage());
                             Platform.runLater(() ->
-                                showAlert("Ocurrió un error recibiendo los datos, intente nuevamente: ", Alert.AlertType.ERROR)
+                                showAlert("Ocurrió un error recibiendo los datos, intente nuevamente", Alert.AlertType.ERROR)
                             );
                         }
-                    } else {
+                    } else if (response.statusCode() == 401 || response.statusCode() == 403) {
                         Platform.runLater(() ->
-                            showAlert("Ocurrió un error recibiendo los datos, intente nuevamente: ", Alert.AlertType.ERROR)
+                            showAlert("No cuenta con los permisos para acceder a esta información.", Alert.AlertType.ERROR)
+                        );
+                    }else if (response.statusCode() == 500) {
+                        Platform.runLater(() ->
+                                showAlert("Ocurrió un error en el servidor, intente nuevamente.", Alert.AlertType.ERROR)
+                        );
+                    }else {
+                        Platform.runLater(() ->
+                                showAlert("Ocurrió un error inesperado, intente nuevamente.", Alert.AlertType.ERROR)
                         );
                     }
                 })
                 .exceptionally(ex -> {
             Platform.runLater(() ->
-                    showAlert("Error de red" + ex.getMessage(), Alert.AlertType.ERROR)
+                    showAlert("Error de red, compruebe su conexión", Alert.AlertType.ERROR)
             );
             return null;
         }).join();

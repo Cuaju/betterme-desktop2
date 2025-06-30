@@ -1,5 +1,6 @@
 package com.betterme.controllers;
 
+import com.betterme.ProgramConfigurations;
 import com.betterme.sessionData.AppContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Platform;
@@ -43,6 +44,9 @@ public class NewModAccountController {
             "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).{8,}$"
     );
 
+    private final String usersUri = ProgramConfigurations.getConfiguration()
+            .getProperty("usersAPI.url");
+
     @FXML
     public void onCreateAccount(ActionEvent actionEvent) {
         if (!validateInputs()) {
@@ -60,31 +64,33 @@ public class NewModAccountController {
         payload.put("phone",       "");
         payload.put("website",     "");
 
+        HttpRequest req;
         try {
             String json = mapper.writeValueAsString(payload);
-            HttpRequest req = HttpRequest.newBuilder()
-                    .uri(new URI("http://localhost:6969/api/users/moderator"))
+            req = HttpRequest.newBuilder()
+                    .uri(new URI(usersUri + "/moderator"))
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(json))
                     .build();
-
-            http.sendAsync(req, HttpResponse.BodyHandlers.ofString())
-                    .thenAccept(response -> Platform.runLater(() -> {
-                        if (response.statusCode() == 201) {
-                            showAlert("¡Éxito!", "Usuario moderador creado correctamente", Alert.AlertType.INFORMATION);
-                        } else {
-                            showAlert("Error", "API respondió: " + response.statusCode(), Alert.AlertType.ERROR);
-                        }
-                    }))
-                    .exceptionally(ex -> {
-                        Platform.runLater(() ->
-                                showAlert("Error", "Fallo al conectar: " + ex.getMessage(), Alert.AlertType.ERROR)
-                        );
-                        return null;
-                    });
         } catch (Exception e) {
             showAlert("Error", "No se pudo serializar datos: " + e.getMessage(), Alert.AlertType.ERROR);
+            return;
         }
+
+        http.sendAsync(req, HttpResponse.BodyHandlers.ofString())
+                .thenAccept(response -> Platform.runLater(() -> {
+                    if (response.statusCode() == 201) {
+                        showAlert("¡Éxito!", "Usuario moderador creado correctamente", Alert.AlertType.INFORMATION);
+                    } else {
+                        showAlert("Error", "API respondió: " + response.statusCode(), Alert.AlertType.ERROR);
+                    }
+                }))
+                .exceptionally(ex -> {
+                    Platform.runLater(() ->
+                            showAlert("Error", "Fallo al conectar: " + ex.getMessage(), Alert.AlertType.ERROR)
+                    );
+                    return null;
+                });
     }
 
     private boolean validateInputs() {
