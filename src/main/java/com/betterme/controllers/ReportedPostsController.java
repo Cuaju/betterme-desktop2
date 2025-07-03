@@ -48,11 +48,17 @@ public class ReportedPostsController implements Initializable {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    switch (getNextReportedPost()) {
+    int result = getNextReportedPost();
+    System.out.println("Obteniendo post reportado: " +result);
+
+    switch (result) {
       case 0:
         setPostInfo();
         break;
       case 1:
+        showAlert("No hay publicaciones reportadas.", Alert.AlertType.INFORMATION);
+        break;
+      case 404:
         showAlert("No hay publicaciones reportadas.", Alert.AlertType.INFORMATION);
         break;
       case 3:
@@ -105,7 +111,8 @@ public class ReportedPostsController implements Initializable {
               postId = respJson.get("postId").asText();
               reason = respJson.get("reason").asText();
             } catch (JsonProcessingException e) {
-                  result.set(2);
+              result.set(1);
+              System.out.println(e.getMessage());
             }
           } else {
             result.set(response.statusCode());
@@ -141,7 +148,7 @@ public class ReportedPostsController implements Initializable {
               post.setTimestamp(respJson.get("timestamp").asText());
               post.setUserID(respJson.get("userId").asText());
             } catch (JsonProcessingException e) {
-              result.set(2);
+              result.set(1);
             }
           } else {
             result.set(response.statusCode());
@@ -199,7 +206,9 @@ public class ReportedPostsController implements Initializable {
       return;
     }
 
-    switch (updateReportStatus(postOk)) {
+    int result = updateReportStatus(postOk);
+    System.out.println("actualizando estado de reporte: "+result);
+    switch (result) {
       case 0:
         break;
       case 401 | 403:
@@ -213,7 +222,9 @@ public class ReportedPostsController implements Initializable {
         return;
     }
 
-    switch (updatePostStatus(postStatus)) {
+    result = updatePostStatus(postStatus);
+    System.out.println("actualizando estado de post: "+result);
+    switch (result) {
       case 0:
         break;
       case 401 | 403:
@@ -287,7 +298,7 @@ public class ReportedPostsController implements Initializable {
             .uri(URI.create(reportsUri + "/" + reportId))
             .header("Content-Type", "application/json")
             .header("Authorization", "Bearer " + CurrentUser.jwt)
-            .method("Patch", HttpRequest.BodyPublishers.ofString(jsonBody, StandardCharsets.UTF_8))
+            .method("PATCH", HttpRequest.BodyPublishers.ofString(jsonBody, StandardCharsets.UTF_8))
             .build();
 
     client.sendAsync(reportRequest, HttpResponse.BodyHandlers.ofString())

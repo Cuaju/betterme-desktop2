@@ -214,7 +214,7 @@ public class ManageAccountsController implements Initializable {
                         }
                     } else {
                         Platform.runLater(() ->
-                                showAlert("Ocurrió un error recibiendo los datos, intente nuevamente: " + response.body(), Alert.AlertType.ERROR)
+                                showAlert("Ocurrió un error recibiendo los datos, intente nuevamente: " + response.statusCode() + response.body(), Alert.AlertType.ERROR)
                         );
                     }
                 })
@@ -272,7 +272,7 @@ public class ManageAccountsController implements Initializable {
                             showAlert("No se encontró ningun usuario con ese correo", Alert.AlertType.INFORMATION)
                         );
                     } else {
-                        System.out.println(response.body());
+                        System.out.println(response.statusCode() + response.body());
                         Platform.runLater(() ->
                             showAlert("Ocurrió un error, intente de nuevo: " + response.body(), Alert.AlertType.ERROR)
                         );
@@ -344,7 +344,7 @@ public class ManageAccountsController implements Initializable {
         String jsonBody;
         try {
             JsonNode payload = new ObjectMapper().createObjectNode()
-                    .put("state", "Deleted");
+                    .put("verified", false);
             jsonBody = new ObjectMapper().writeValueAsString(payload);
         } catch (Exception e) {
             showAlert("Internal error: " + e.getMessage(), Alert.AlertType.ERROR);
@@ -355,7 +355,7 @@ public class ManageAccountsController implements Initializable {
                 .uri(URI.create(usersUri + "/" + id + "/verification"))
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer " + CurrentUser.jwt)
-                .method("Patch", HttpRequest.BodyPublishers.ofString(jsonBody, StandardCharsets.UTF_8))
+                .method("PATCH", HttpRequest.BodyPublishers.ofString(jsonBody, StandardCharsets.UTF_8))
                 .build();
 
         client.sendAsync(reportRequest, HttpResponse.BodyHandlers.ofString())
@@ -368,9 +368,13 @@ public class ManageAccountsController implements Initializable {
                         Platform.runLater(() ->
                                 showAlert("No se encontró el usuario", Alert.AlertType.INFORMATION)
                         );
+                    } else if (response.statusCode() == 401 || response.statusCode() == 403) {
+                        Platform.runLater(() ->
+                                showAlert("Inicie sesión otra vez", Alert.AlertType.INFORMATION)
+                        );
                     } else {
                         Platform.runLater(() ->
-                                showAlert("Ocurrió un error, intente de nuevo", Alert.AlertType.ERROR)
+                                showAlert("Ocurrió un error, intente de nuevo: " + response.statusCode(), Alert.AlertType.ERROR)
                         );
                     }
                 })

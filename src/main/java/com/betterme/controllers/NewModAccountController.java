@@ -41,7 +41,7 @@ public class NewModAccountController {
     );
 
     private static final Pattern PASSWORD_REGEX = Pattern.compile(
-            "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).{8,}$"
+            "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&*+=]).{8,}$"
     );
 
     private final String usersUri = ProgramConfigurations.getConfiguration()
